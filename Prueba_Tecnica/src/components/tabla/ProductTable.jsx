@@ -1,21 +1,14 @@
-import  { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./tabla.css";
+import { deleteProduct, getProducts } from "../../apiServices";
 
 const ProductTable = () => {
+  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-//   const [currentPage, setCurrentPage] = useState(1);
-  //   const history = useHistory();
-
-  const products = [
-    {
-      logo: "JG",
-      name: "Nombre del producto",
-      description: "Descripción",
-      releaseDate: "01/01/2000",
-      restructureDate: "01/01/2001",
-    },
-  ];
+  const navigate = useNavigate();
+  const [showActionsMenu, setShowActionsMenu] = useState(null);
 
   const filteredProducts = products.filter(
     (product) =>
@@ -24,26 +17,36 @@ const ProductTable = () => {
   );
 
   const handleAddClick = () => {
-    history.push("/form");
+    navigate("/productos/agregar");
   };
 
   const handleEditClick = (index) => {
-    history.push(`/form?edit=${index}`);
+    navigate(`/productos/editar/${index}`);
   };
 
-//   const handleDeleteClick = (index) => {
-//     // Agrega lógica para eliminar producto
-//   };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getProducts();
+        console.log("Datos recibidos:", data);
+        setProducts(data);
+      } catch (error) {
+        console.error("Error al obtener productos", error);
+      }
+    };
 
-//   const handlePageChange = (newPage) => {
-//     setCurrentPage(newPage);
-//   };
+    fetchProducts();
+  }, []);
 
-//   const startIndex = (currentPage - 1) * rowsPerPage;
-//   const currentProducts = filteredProducts.slice(
-//     startIndex,
-//     startIndex + rowsPerPage
-//   );
+  const handleDeleteClick = (id) => {
+    deleteProduct(id).then(() => {
+      setProducts(products.filter((product) => product.id !== id));
+    });
+  };
+
+  const toggleActionsMenu = (index) => {
+    setShowActionsMenu(showActionsMenu === index ? null : index);
+  };
 
   return (
     <div className="container">
@@ -120,13 +123,13 @@ const ProductTable = () => {
           <div className="table-body">
             {filteredProducts.slice(0, rowsPerPage).map((product, index) => (
               <div className="table-row" key={index}>
-                <div>{product.logo}</div>
-                <div>{product.name}</div>
-                <div>{product.description}</div>
-                <div>{product.releaseDate}</div>
-                <div>{product.restructureDate}</div>
-                <div>
-                  <button>
+                <div className="table-cell">{product.logo}</div>{" "}
+                <div className="table-cell">{product.name}</div>{" "}
+                <div className="table-cell">{product.description}</div>{" "}
+                <div className="table-cell">{product.releaseDate}</div>{" "}
+                <div className="table-cell">{product.restructureDate}</div>{" "}
+                <div className="table-cell">
+                  <button onClick={() => toggleActionsMenu(index)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="15"
@@ -142,14 +145,16 @@ const ProductTable = () => {
                       </g>
                     </svg>
                   </button>
-                  <div className="menu">
-                    <button onClick={() => handleEditClick(index)}>
-                      Editar
-                    </button>
-                    {/* <button onClick={() => handleDeleteClick(index)}>
-                      Eliminar
-                    </button> */}
-                  </div>
+                  {showActionsMenu === index && (
+                    <div className="menu">
+                      <button onClick={() => handleEditClick(product.id)}>
+                        Editar
+                      </button>
+                      <button onClick={() => handleDeleteClick(product.id)}>
+                        Eliminar
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

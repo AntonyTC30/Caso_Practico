@@ -12,7 +12,6 @@ body {
   padding: 25px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  
 }
 
 .search-add-container {
@@ -31,15 +30,15 @@ body {
 }
 
 .add-button {
-    padding: 10px 20px;
-    background-color: #ffca28;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  padding: 10px 20px;
+  background-color: #ffca28;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .add-button:hover {
-    background-color: #ffb300;
+  background-color: #ffb300;
 }
 
 button {
@@ -56,9 +55,9 @@ button:hover {
 }
 
 .table-container {
-    overflow-x: auto;
-    overflow-y: auto;
-    max-height: 400px; /* Ajusta según sea necesario */
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 400px; /* Ajusta según sea necesario */
 }
 
 .table {
@@ -95,6 +94,12 @@ select {
   padding: 5px;
 }
 
+.table-cell {
+  padding: 10px;
+  border-bottom: 1px solid #ddd; 
+  text-align: left; 
+}
+
 @media (max-width: 600px) {
   .table {
     display: block;
@@ -115,5 +120,8 @@ select {
 
   .table-row > div {
     border-bottom: 1px solid #ddd;
+  }
+  .table-cell {
+    border-right: none; /* No mostrar borde derecho en dispositivos móviles */
   }
 }

@@ -1,4 +1,3 @@
-
 import "./navbar.css"; 
 import logo from "./img/Banco-Pichincha.png"; 
 
